@@ -1,0 +1,76 @@
+<!-- RIGHT COLUMN: Contents of Selected Container Box -->
+<div class="md:col-span-2 bg-gray-900 p-6 rounded-2xl border border-gray-800 shadow-2xl h-fit">
+    <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+        <h2 class="text-lg font-bold text-gray-200 tracking-wide">
+            {% if search_query %}
+              Search Findings for <span class="text-yellow-400 font-black">"{{ search_query }}"</span>
+            {% else %}
+              Container Inventory Map: <span class="text-blue-400 font-black underline">{{ selected_box }}</span>
+            {% endif %}
+        </h2>
+        <span class="bg-gray-800 border border-gray-700 text-gray-300 text-xs font-mono font-bold px-3 py-1 rounded-full shadow-inner">
+            {{ items|length }} Item Node(s)
+        </span>
+    </div>
+
+    {% if items|length == 0 %}
+    <div class="text-center py-16 text-gray-600 bg-gray-950 rounded-xl border border-dashed border-gray-800">
+        <p class="text-5xl mb-4">🔍</p>
+        <p class="font-medium text-gray-500">This target container node is empty or unindexed.</p>
+    </div>
+    {% else %}
+    <div class="space-y-4">
+        {% for item in items %}
+        <div class="bg-gray-950 p-5 rounded-xl border border-gray-850 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-gray-700 transition-all duration-200">
+            <div>
+                <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                    <span class="px-2.5 py-0.5 bg-blue-900 bg-opacity-20 border border-blue-800 text-blue-400 text-[10px] font-black tracking-widest uppercase rounded-md shadow-sm">
+                        {% if item.category == "RAM" %}💾 RAM
+                        {% elif item.category == "CPU" %}🎛️ CPU
+                        {% elif item.category == "SSD" %}⚡ SSD
+                        {% else %}导 HDD{% endif %}
+                    </span>
+                    <h3 class="font-bold text-gray-200 text-lg">
+                        {{ item.brand }} <span class="text-gray-400 font-medium">{{ item.model }}</span>
+                    </h3>
+                    <span class="text-[10px] font-mono bg-gray-900 border border-gray-800 text-gray-500 px-2 py-0.5 rounded shadow-inner">
+                        📍 {{ item.box_number }}
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mt-3">
+                    {% for key, val in item.specs.items() %}
+                    <span class="text-xs bg-gray-900 px-3 py-1 rounded-lg text-gray-300 border border-gray-800 shadow-sm font-medium">
+                        <strong class="text-gray-500 font-bold uppercase text-[9px] tracking-wider mr-1">{{ key }}:</strong>{{ val }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- STOCK ADJUSTMENT COUNTERS -->
+            <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-800 gap-2.5">
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Quantity</span>
+
+                <div class="flex items-center gap-1.5 bg-gray-950 border border-gray-800 p-1 rounded-xl shadow-inner">
+                    <form action="/web/adjust-quantity/{{ item.id }}/decrement?current_box={{ selected_box }}" method="POST">
+                        <button type="submit" class="w-8 h-8 rounded-lg bg-gray-900 hover:bg-red-950 hover:text-red-400 font-black border border-gray-800 flex items-center justify-center text-gray-400 shadow-md">
+                            −
+                        </button>
+                    </form>
+
+                    <span class="w-12 text-center font-black text-2xl text-green-400 font-mono tracking-tighter">
+                        {{ item.quantity }}
+                    </span>
+
+                    <form action="/web/adjust-quantity/{{ item.id }}/increment?current_box={{ selected_box }}" method="POST">
+                        <button type="submit" class="w-8 h-8 rounded-lg bg-gray-900 hover:bg-green-950 hover:text-green-400 font-black border border-gray-800 flex items-center justify-center text-gray-400 shadow-md">
+                            +
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

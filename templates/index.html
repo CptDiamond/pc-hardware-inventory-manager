@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Hardware Organizer</title>
+    <style>
+        html { line-height: 1.5; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+        body { margin: 0; background-color: #030712; color: #f3f4f6; }
+        *, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: #1f2937; }
+        header { background-color: #111827; border-bottom: 1px solid #1f2937; padding: 1.25rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
+        .dashboard-container { max-w: 90rem; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 1024px) { .dashboard-container { grid-template-columns: 1fr 2fr 1fr; } }
+        .bg-gray-900 { background-color: #111827; } .bg-gray-950 { background-color: #030712; }
+        .p-3 { padding: 0.75rem; } .p-4 { padding: 1rem; } .p-6 { padding: 1.5rem; }
+        .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
+        .border { border-width: 1px; } .border-2 { border-width: 2px; border-style: solid; } .border-b { border-bottom-width: 1px; }
+        .border-gray-800 { border-color: #1f2937; } .border-blue-500 { border-color: #3b82f6; }
+        .text-2xl { font-size: 1.5rem; } .text-xl { font-size: 1.25rem; } .text-sm { font-size: 0.875rem; } .text-xs { font-size: 0.75rem; }
+        .font-black { font-weight: 900; } .font-bold { font-weight: 700; }
+        .text-blue-400 { color: #60a5fa; } .text-blue-300 { color: #93c5fd; } .text-emerald-400 { color: #34d399; } .text-gray-200 { color: #e5e7eb; } .text-gray-400 { color: #9ca3af; } .text-gray-500 { color: #6b7280; } .text-red-400 { color: #f87171; }
+        .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem; } .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .gap-2 { gap: 0.5rem; } .gap-4 { gap: 1rem; } .w-full { width: 100%; }
+        select, input { background-color: #030712; border: 1px solid #1f2937; border-radius: 0.5rem; color: #f3f4f6; padding: 0.5rem; font-size: 0.875rem; width: 100%; outline: none; }
+        select:focus, input:focus { border-color: #3b82f6; } button { cursor: pointer; }
+        .bg-blue-600 { background-color: #2563eb; } .bg-blue-600:hover { background-color: #1d4ed8; }
+        .bg-emerald-600 { background-color: #059669; } .bg-emerald-600:hover { background-color: #047857; }
+        .bg-gray-800 { background-color: #1f2937; } .bg-gray-800:hover { background-color: #374151; }
+        .bg-red-950 { background-color: #451a03; }
+        a { text-decoration: none; color: inherit; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div style="max-width: 90rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="text-2xl font-black text-blue-400">⚙️ PC Hardware Closet Map</h1>
+            <span class="text-sm text-gray-400 font-bold">Engine v8.0 - Flat Structure</span>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <div style="max-width: 90rem; margin: 1.5rem auto 0 auto; padding: 0 1.5rem;">
+        <form action="/" method="GET" class="flex gap-4 bg-gray-900 p-4 rounded-2xl border border-gray-800">
+            <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search hardware specs... (e.g. DDR4, NVMe, 16GB)" style="flex-grow: 1;">
+            <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl">Search</button>
+            {% if search_query %}<a href="/" class="px-6 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl border border-gray-800 flex items-center">Clear</a>{% endif %}
+        </form>
+    </div>
+
+    <!-- 3-Column Work Bench Layout Grid -->
+    <div class="dashboard-container">
+
+        <!-- COLUMN 1: Physical Storage Grid Map -->
+        <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800 h-fit">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">📦 Shelf Map</h2>
+            <div class="grid grid-cols-2 gap-4">
+                {% for loc in locations %}
+                <a href="/?selected_box={{ loc.box_number }}" class="block p-4 rounded-xl border-2 text-center {% if loc.box_number == selected_box %} border-blue-500 bg-blue-900 bg-opacity-20 text-blue-300 {% else %} border-gray-800 bg-gray-950 text-gray-400 hover:border-gray-700 hover:bg-gray-800 {% endif %}">
+                    <span class="block text-3xl mb-1">📥</span>
+                    <span class="block font-black text-sm">{{ loc.box_number }}</span>
+                    <span class="text-[10px] text-gray-500 block mt-1 uppercase">{{ loc.shelf_name }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- COLUMN 2: Core Hardware Item Cards -->
+        {% include 'items.html' %}
+
+        <!-- COLUMN 3: Permanent Anchored Admin Sub-sections -->
+        <aside class="space-y-6">
+            <h2 class="text-xs font-black text-gray-400 uppercase tracking-wider border-b border-gray-800 pb-2">🛠️ Closet Management</h2>
+
+            <!-- Form A: Log New Component -->
+            <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 shadow-md">
+                <h3 class="text-xs font-bold uppercase text-gray-400 mb-3">➕ Log New Component</h3>
+                <form action="/web/add-item" method="POST" class="space-y-3">
+                    <div>
+                        <select id="categorySelect" name="category">
+                            <option value="RAM">RAM Stick</option> <option value="SSD">Solid State Drive (SSD)</option> <option value="HDD">Hard Disk Drive (HDD)</option> <option value="CPU">Processor (CPU)</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" name="brand" placeholder="Brand" required>
+                        <input type="text" name="model" placeholder="Model Name" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" name="quantity" min="1" value="1" required>
+                        <select name="box_number">
+                            {% for loc in locations %}<option value="{{ loc.box_number }}" {% if loc.box_number == selected_box %}selected{% endif %}>{{ loc.box_number }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="bg-gray-950 p-3 rounded-lg border border-gray-850 space-y-3">
+                        <p class="text-[10px] text-blue-400 font-bold uppercase border-b border-gray-800 pb-1">📋 Specifications</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label id="labelSpec1" class="block text-[9px] font-bold text-gray-600 uppercase">Platform</label><input type="text" id="inputSpec1" name="spec1" placeholder="e.g. DDR4"></div>
+                            <div><label id="labelSpec2" class="block text-[9px] font-bold text-gray-600 uppercase">Speed</label><input type="text" id="inputSpec2" name="spec2" placeholder="e.g. 3200"></div>
+                        </div>
+                        <div id="rowSpec3"><label id="labelSpec3" class="block text-[9px] font-bold text-gray-600 uppercase">Capacity</label><input type="text" id="inputSpec3" name="spec3" placeholder="e.g. 16"></div>
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs uppercase">Save Record</button>
+                </form>
+            </div>
+
+            <!-- Form B: Initialize Box -->
+            <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 shadow-md">
+                <h3 class="text-xs font-bold uppercase text-gray-400 mb-3">📦 Initialize Box</h3>
+                <form action="/web/add-box" method="POST" class="space-y-3">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" name="box_number" placeholder="Box ID" required>
+                        <input type="text" name="shelf_name" placeholder="Shelf Slot" required>
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs uppercase">Create Box Node</button>
+                </form>
+            </div>
+
+            <!-- Form C: Manage Box (Flattened: No conditional IF required!) -->
+            <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 shadow-md">
+                <h3 class="text-xs font-bold uppercase text-gray-400 mb-3">🛠️ Manage Active Node: <span class="text-blue-400 font-mono">{{ selected_box }}</span></h3>
+                <form action="/web/edit-box" method="POST" class="space-y-3 mb-4 border-b border-gray-800 pb-4">
+                    <input type="hidden" name="current_box_number" value="{{ selected_box }}">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" name="new_box_number" value="{{ selected_box }}" required>
+                        {% for loc in locations %}{% if loc.box_number == selected_box %}<input type="text" name="new_shelf_name" value="{{ loc.shelf_name }}" required>{% endif %}{% endfor %}
+                    </div>
+                    <button type="submit" class="w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-bold uppercase rounded-lg border border-gray-700">Save Box Changes</button>
+                </form>
