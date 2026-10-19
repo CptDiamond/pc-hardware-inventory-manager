@@ -1,0 +1,1 @@
+# pc-hardware-inventory-manager
