@@ -1,0 +1,84 @@
+# ==============================================================================
+# Python Environment & Caches
+# ==============================================================================
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python byte-code / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging artifacts
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==============================================================================
+# Testing & Code Quality
+# ==============================================================================
+.pytest_cache/
+.htmlcov/
+.tox/
+.coverage
+.coverage.*
+coverage.xml
+nosetests.xml
+pylintrc
+.htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ==============================================================================
+# Databases, Run-time data & Logs
+# ==============================================================================
+# Local SQLite database files generated during runs
+*.db
+*.sqlite
+*.sqlite3
+
+# Application log files
+*.log
+logs/
+
+# ==============================================================================
+# Application Secrets / Environments (CRUCIAL for Security)
+# ==============================================================================
+.env
+.env.local
+.env.*.local
+.flaskenv
+user_secrets/
+
+# ==============================================================================
+# IDEs, Editors & System Files
+# ==============================================================================
+# JetBrains / PyCharm
+.idea/
+
+# Visual Studio Code
+.vscode/
+!.vscode/extensions.json
+
+# Operating System Files
+.DS_Store
+Thumbs.db
