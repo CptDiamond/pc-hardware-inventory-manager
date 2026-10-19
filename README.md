@@ -34,7 +34,7 @@ Follow these quick steps to pull down and run this project locally on your machi
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/CptDiamond/pc-hardware-inventory-manager
+git clone https://github.com/CptDiamond/pc-hardware-inventory-manager.git
 cd pc-hardware-inventory-manager
 ```
 
